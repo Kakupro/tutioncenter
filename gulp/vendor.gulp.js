@@ -1,5 +1,5 @@
 const gulp = require('gulp');
-const del = require('del');
+
 
 const {
   dependencies,
@@ -80,13 +80,14 @@ gulp.task('vendor:move', () => {
   return Promise.all(promises);
 });
 
-gulp.task('vendor:clean', () => {
+gulp.task('vendor:clean', async () => {
+  const { deleteAsync } = await import('del');
   const directories = Object.keys(vendors).map(
     (vendor) => `${baseDir}/vendors/${vendors[vendor].dest}`
   );
   const targetedDirectories = [...directories, 'temp'];
 
-  return del(targetedDirectories);
+  return deleteAsync(targetedDirectories);
 });
 
 gulp.task('vendor', gulp.series('vendor:clean', 'vendor:move'));
